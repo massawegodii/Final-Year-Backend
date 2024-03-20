@@ -1,11 +1,14 @@
 package com.massawe.serviceImpl;
 
+import com.google.common.base.Strings;
+import com.massawe.Configuration.JwtRequestFilter;
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.RoleDao;
 import com.massawe.dao.UserDao;
 import com.massawe.entity.Role;
 import com.massawe.entity.User;
 import com.massawe.service.UserService;
+import com.massawe.utils.EmailUtils;
 import com.massawe.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,15 +24,21 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private RoleDao roleDao;
+    @Autowired
+    JwtRequestFilter jwtFilter;
+    @Autowired
+    private EmailUtils emailUtils;
 
 
     @Override
     public ResponseEntity<String> registerNewUser(Map<String, String> requestMap) {
 
         try {
+            if (requestMap.isEmpty()) {
+                return MyUtils.getResponseEntity("Request data is empty.", HttpStatus.BAD_REQUEST);
+            }
             if (validateSignUpMap(requestMap)) {
                 User user = userDao.findByEmail(requestMap.get("email"));
                 if (Objects.isNull(user)) {
@@ -49,6 +55,16 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<List<User>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private boolean validateSignUpMap(Map<String, String> requestMap){
@@ -109,6 +125,80 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<String> deleteAllUser(String userName) {
+        try {
+            if (userName == null || userName.isEmpty()) {
+                return MyUtils.getResponseEntity("UserName cannot be empty.", HttpStatus.BAD_REQUEST);
+            }
+
+            User userToDelete = userDao.findByUserName(userName);
+            if (userToDelete == null) {
+                return MyUtils.getResponseEntity("User with UserName " + userName + " not found.", HttpStatus.NOT_FOUND);
+            }
+
+            // Remove the User from all associated Roles
+            userToDelete.getRole().clear();
+
+            // Now delete the User
+            userDao.delete(userToDelete);
+
+            return MyUtils.getResponseEntity("User with UserName " + userName + " deleted successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> updateUsers(Map<String, String> requestMap) {
+        try {
+            // Validate the request
+            if (!validateUserUpdateRequest(requestMap)) {
+                return MyUtils.getResponseEntity(MyConstant.INVALID_DATA, HttpStatus.BAD_REQUEST);
+            }
+
+            String userName = requestMap.get("userName");
+            User existingUser = userDao.findByUserName(userName);
+            if (existingUser == null) {
+                return MyUtils.getResponseEntity(MyConstant.NOT_FOUND, HttpStatus.NOT_FOUND);
+            }
+
+            // Update the user fields
+            if (requestMap.containsKey("email")) {
+                existingUser.setEmail(requestMap.get("email"));
+            }
+            if (requestMap.containsKey("userFirstName")) {
+                existingUser.setUserFirstName(requestMap.get("userFirstName"));
+            }
+            if (requestMap.containsKey("userLastName")) {
+                existingUser.setUserLastName(requestMap.get("userLastName"));
+            }
+            if (requestMap.containsKey("userPassword")) {
+                existingUser.setUserPassword(requestMap.get("userPassword"));
+            }
+
+            // Save the updated user
+            userDao.save(existingUser);
+
+            return MyUtils.getResponseEntity("User with UserName " + userName + " updated successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private boolean validateUserUpdateRequest(Map<String, String> requestMap) {
+        return requestMap.containsKey("userName")
+                && (requestMap.containsKey("email")
+                || requestMap.containsKey("userFirstName")
+                || requestMap.containsKey("userLastName")
+                || requestMap.containsKey("userPassword"));
+    }
+
+
+
+
+    @Override
     public ResponseEntity<String> forAdmin(Map<String, String> requestMap) {
         try {
             return MyUtils.getResponseEntity("This URL is only accessible to the Admin.", HttpStatus.OK);
@@ -129,9 +219,60 @@ public class UserServiceImpl implements UserService {
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+            if (validateChangePasswordMap(requestMap)) {
+                String email = requestMap.get("email");
+                String newPassword = requestMap.get("newPassword");
+
+                if (email.isEmpty() || newPassword.isEmpty()) {
+                    return MyUtils.getResponseEntity("Email or password cannot be empty.", HttpStatus.BAD_REQUEST);
+                }
+
+                User user = userDao.findByEmail(email);
+
+                if (user != null) {
+                    String encodedPassword = getEncodedPassword(newPassword);
+                    user.setUserPassword(encodedPassword);
+                    userDao.save(user);
+
+                    return MyUtils.getResponseEntity("Password changed successfully!", HttpStatus.OK);
+                } else {
+                    return MyUtils.getResponseEntity("User not found.", HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return MyUtils.getResponseEntity(MyConstant.INVALID_DATA, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean validateChangePasswordMap(Map<String, String> requestMap){
+        return requestMap.containsKey("email") && requestMap.containsKey("newPassword") &&
+                !requestMap.get("email").isEmpty() && !requestMap.get("newPassword").isEmpty();
+    }
+
     public String getEncodedPassword(String password){
         return passwordEncoder.encode(password);
     }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            User user = userDao.findByEmail(requestMap.get("email"));
+            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail()))
+                emailUtils.forgetMail(user.getEmail(), "Credential by Smart Asset Management Management System", user.getUserPassword());
+            return MyUtils.getResponseEntity("Check your mail for Credentials.", HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 
 }
 
