@@ -3,6 +3,7 @@ package com.massawe.rest;
 import com.massawe.constants.MyConstant;
 import com.massawe.entity.ImageModel;
 import com.massawe.entity.Product;
+import com.massawe.entity.User;
 import com.massawe.serviceImpl.ProductService;
 import com.massawe.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,12 +28,7 @@ public class ProductRest {
     @Autowired
     private ProductService productService;
 
-//
-//    @PreAuthorize("hasRole('Admin')")
-//    @PostMapping({"/addNewProduct"})
-//    public Product addNewProduct(@RequestBody Product product){
-//        return productService.addNewProduct(product);
-//    }
+
 
     @PreAuthorize("hasRole('Admin')")
     @PostMapping(value = {"/addNewProduct"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

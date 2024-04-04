@@ -2,6 +2,7 @@ package com.massawe.Configuration;
 
 import com.massawe.JwtService.JwtService;
 import com.massawe.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,7 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
    public static String CURRENT_USER = "";
-
+    Claims claims = null;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -40,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtUtil.getUsernameFromToken(jwtToken);
-
+                claims = jwtUtil.getAllClaimsFromToken(jwtToken);
                 CURRENT_USER = username;
 
             } catch (IllegalArgumentException e) {
@@ -67,5 +68,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
-
+    public boolean isAdmin(){
+        return "Admin".equalsIgnoreCase((String) claims.get("role"));
+    }
+    public boolean isUser(){
+        return "User".equalsIgnoreCase((String) claims.get("role"));
+    }
 }

@@ -3,7 +3,6 @@ package com.massawe.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,10 +17,6 @@ public class User {
     private String userLastName;
     @Column(name = "userPassword")
     private String userPassword;
-
-
-//    @OneToMany(mappedBy = "user")
-//    private List<Product> products;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(name = "USER_ROLE",

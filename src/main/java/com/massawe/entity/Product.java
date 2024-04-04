@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer productId;
     private String productName;
     @Column(length = 2000)
@@ -22,14 +22,14 @@ public class Product {
     private Integer productSerialNo;
     private String productDepartment;
     private String productCategory;
-
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
     private Date productDate;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_name")
-//    private User user;
+    @ManyToOne(cascade = CascadeType.PERSIST)// Many products can belong to one user
+    @JoinColumn(name = "user_name") // Name of the column in Product table that references User
+    private User user;
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "product_images",

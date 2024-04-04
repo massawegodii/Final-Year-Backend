@@ -2,6 +2,7 @@ package com.massawe.serviceImpl;
 
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.ProductDao;
+import com.massawe.dao.UserDao;
 import com.massawe.entity.Product;
 import com.massawe.service.ProductRestService;
 import com.massawe.utils.MyUtils;
@@ -10,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,6 +18,11 @@ import java.util.Optional;
 public class ProductRestServiceImpl implements ProductRestService {
     @Autowired
     ProductDao productDao;
+
+    @Autowired
+    UserDao userDao;
+
+
     @Override
     public ResponseEntity<String> updateAssets(Map<String, String> requestMap) {
         try {
@@ -67,9 +71,5 @@ public class ProductRestServiceImpl implements ProductRestService {
         }
     }
 
-//    @Override
-//    public Product findProductIdByUserName(String userName) {
-//        return productDao.findByUser_UserName(userName);
-//    }
 
 }
