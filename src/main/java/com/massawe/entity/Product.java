@@ -22,6 +22,8 @@ public class Product {
     private Integer productSerialNo;
     private String productDepartment;
     private String productCategory;
+    private String qrcode;
+
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
     private Date productDate;
@@ -77,6 +79,5 @@ public class Product {
             }
     )
     private Set<Category> assetsCategory;
-
 
 }

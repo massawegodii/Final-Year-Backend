@@ -11,13 +11,4 @@ public interface ProductRest1 {
     @PostMapping(path = "/updateAssets")
     public ResponseEntity<String> updateAssets(@RequestBody(required = true) Map<String, String> requestMap);
 
-//    @PostMapping(path = "/assignToUser")
-//    public ResponseEntity<String> assignToUser(@RequestBody(required = true) Map<String, String> requestMap);
-
-//    @GetMapping("/getAssignById/{id}")
-//    ResponseEntity<?> getAssignById(@PathVariable Integer id);
-
-
-
-
 }

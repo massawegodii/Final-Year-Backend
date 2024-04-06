@@ -114,6 +114,27 @@
 		<artifactId>spring-boot-starter-data-mongodb</artifactId>
 	</dependency>
 
+		<dependency>
+			<groupId>com.github.hiwepy</groupId>
+			<artifactId>zxing-spring-boot-starter</artifactId>
+			<version>1.0.2.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.5.3</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

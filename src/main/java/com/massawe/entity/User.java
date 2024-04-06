@@ -15,6 +15,8 @@ public class User {
     private String email;
     private String userFirstName;
     private String userLastName;
+    private String imageUrl;
+    private String userCode;
     @Column(name = "userPassword")
     private String userPassword;
 

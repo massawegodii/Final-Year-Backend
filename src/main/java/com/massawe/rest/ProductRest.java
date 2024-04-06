@@ -3,9 +3,9 @@ package com.massawe.rest;
 import com.massawe.constants.MyConstant;
 import com.massawe.entity.ImageModel;
 import com.massawe.entity.Product;
-import com.massawe.entity.User;
 import com.massawe.serviceImpl.ProductService;
 import com.massawe.utils.MyUtils;
+import com.massawe.qrCode.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -29,13 +28,20 @@ public class ProductRest {
     private ProductService productService;
 
 
-
     @PreAuthorize("hasRole('Admin')")
     @PostMapping(value = {"/addNewProduct"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> addNewProduct(@RequestPart Product product,
                                  @RequestPart("imageFile") MultipartFile[] file){
 
         try {
+            // Generate and set QR code data
+            String qrData = "SAMS\n" +
+                    "ID: " + product.getProductId() + "\n" +
+                    "Name: " + product.getProductName() + "\n" +
+                    "Price: " + product.getProductPrice() + "\n" +
+                    "Serial Number: " + product.getProductSerialNo();
+            product.setQrcode(qrData);
+
             Set<ImageModel> images = uploadImage(file);
             product.setProductImages(images);
             productService.addNewProduct(product);

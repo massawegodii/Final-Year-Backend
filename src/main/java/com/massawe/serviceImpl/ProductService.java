@@ -6,6 +6,7 @@ import com.massawe.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class ProductService {
     @Autowired
     private ProductDao productDao;
+
 
     public Product addNewProduct(Product product) {
             return productDao.save(product);
@@ -30,5 +32,6 @@ public class ProductService {
     public Product getProductDetailsById(Integer productId){
         return productDao.findById(productId).get();
     }
+
 
 }
