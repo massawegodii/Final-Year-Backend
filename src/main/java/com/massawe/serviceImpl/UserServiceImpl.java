@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean validateSignUpMap(Map<String, String> requestMap){
-        if(requestMap.containsKey("userName") && requestMap.containsKey("userFirstName") && requestMap.containsKey("userLastName") && requestMap.containsKey("email")
+        if(requestMap.containsKey("userName") && requestMap.containsKey("userFirstName") && requestMap.containsKey("userLastName") && requestMap.containsKey("phoneNumber") && requestMap.containsKey("imageUrl") && requestMap.containsKey("email")
                 && requestMap.containsKey("userPassword")){
             return true;
         }
@@ -79,7 +79,9 @@ public class UserServiceImpl implements UserService {
         user.setUserName(requestMap.get("userName"));
         user.setUserFirstName(requestMap.get("userFirstName"));
         user.setEmail(requestMap.get("email"));
+        user.setImageUrl(requestMap.get("imageUrl"));
         user.setUserPassword(requestMap.get("userPassword"));
+        user.setPhoneNumber(requestMap.get("phoneNumber"));
         user.setUserLastName(requestMap.get("userLastName"));
         Role role = roleDao.findById("User").get();
         Set<Role> roles = new HashSet<>();
@@ -113,9 +115,9 @@ public class UserServiceImpl implements UserService {
         userDao.save(adminUser);
 
 //        User user = new User();
-//        user.setUserFirstName("Kevoo");
-//        user.setUserLastName("Mamkwe");
-//        user.setUserName("kevoo");
+//        user.setUserFirstName("keni");
+//        user.setUserLastName("jane");
+//        user.setUserName("lee");
 //        user.setUserPassword(getEncodedPassword("123"));
 //        Set<Role> userRoles = new HashSet<>();
 //        user.setRole(userRoles);
@@ -176,6 +178,12 @@ public class UserServiceImpl implements UserService {
             if (requestMap.containsKey("userPassword")) {
                 existingUser.setUserPassword(requestMap.get("userPassword"));
             }
+            if (requestMap.containsKey("phoneNumber")) {
+                existingUser.setPhoneNumber(requestMap.get("phoneNumber"));
+            }
+            if (requestMap.containsKey("imageUrl")) {
+                existingUser.setImageUrl(requestMap.get("imageUrl"));
+            }
 
             // Save the updated user
             userDao.save(existingUser);
@@ -189,10 +197,14 @@ public class UserServiceImpl implements UserService {
 
     private boolean validateUserUpdateRequest(Map<String, String> requestMap) {
         return requestMap.containsKey("userName")
-                && (requestMap.containsKey("email")
+                || (requestMap.containsKey("email")
                 || requestMap.containsKey("userFirstName")
                 || requestMap.containsKey("userLastName")
+                || requestMap.containsKey("phoneNumber")
+                || requestMap.containsKey("imageUrl")
+                || requestMap.containsKey("role")
                 || requestMap.containsKey("userPassword"));
+
     }
 
 
