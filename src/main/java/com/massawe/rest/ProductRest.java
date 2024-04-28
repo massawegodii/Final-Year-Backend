@@ -5,7 +5,6 @@ import com.massawe.entity.ImageModel;
 import com.massawe.entity.Product;
 import com.massawe.serviceImpl.ProductService;
 import com.massawe.utils.MyUtils;
-import com.massawe.qrCode.QRCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

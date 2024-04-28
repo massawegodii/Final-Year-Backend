@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
         roleDao.save(userRole);
 
         User adminUser = new User();
-        adminUser.setUserName("admin123");
+        adminUser.setUserName("admin");
         adminUser.setUserPassword(getEncodedPassword("123"));
         adminUser.setUserFirstName("admin");
         adminUser.setUserLastName("admin");
@@ -204,11 +204,7 @@ public class UserServiceImpl implements UserService {
                 || requestMap.containsKey("imageUrl")
                 || requestMap.containsKey("role")
                 || requestMap.containsKey("userPassword"));
-
     }
-
-
-
 
     @Override
     public ResponseEntity<String> forAdmin(Map<String, String> requestMap) {
@@ -284,7 +280,23 @@ public class UserServiceImpl implements UserService {
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<?> lockUserAccount(String username) {
+        try {
+            User user = userDao.findByUserName(username);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
 
+            user.setAccountLocked(true);
+            userDao.save(user);
+
+            return MyUtils.getResponseEntity("User account locked successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
 

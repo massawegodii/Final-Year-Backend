@@ -74,4 +74,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     public boolean isUser(){
         return "User".equalsIgnoreCase((String) claims.get("role"));
     }
+
 }

@@ -97,6 +97,15 @@ public class UseRestImpl implements UserRest {
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<?> lockUserAccount(String username) {
+        try {
+            return userService.lockUserAccount(username);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }
