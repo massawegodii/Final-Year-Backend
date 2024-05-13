@@ -4,6 +4,7 @@ import com.massawe.dao.UserDao;
 import com.massawe.entity.JwtRequest;
 import com.massawe.entity.JwtResponse;
 import com.massawe.entity.User;
+import com.massawe.exception.BlockedUserException;
 import com.massawe.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,12 @@ public class JwtService implements UserDetailsService {
     public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
         String userName = jwtRequest.getUserName();
         String userPassword = jwtRequest.getUserPassword();
+
+        // Check if the user is blocked
+        if (isUserBlocked(userName)) {
+            throw new BlockedUserException("User is blocked. Please contact the administrator.");
+        }
+
         authenticate(userName, userPassword);
 
         UserDetails userDetails = loadUserByUsername(userName);
@@ -40,6 +47,11 @@ public class JwtService implements UserDetailsService {
 
         User user = userDao.findById(userName).get();
         return new JwtResponse(user, newGeneratedToken);
+    }
+
+    public boolean isUserBlocked(String username) {
+        User user = userDao.findById(username).orElse(null);
+        return user != null && user.isBlocked();
     }
 
 
@@ -67,7 +79,7 @@ public class JwtService implements UserDetailsService {
         return authorities;
     }
 
-    private void authenticate(String userName, String userPassword) throws Exception {
+    public void authenticate(String userName, String userPassword) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
         } catch (DisabledException e) {
@@ -76,4 +88,19 @@ public class JwtService implements UserDetailsService {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
+
+    // Method to block a user
+    public void blockUser(String username) {
+        User user = userDao.findById(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setBlocked(true);
+        userDao.save(user);
+    }
+
+    // Method to unblock a user
+    public void unblockUser(String username) {
+        User user = userDao.findById(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setBlocked(false);
+        userDao.save(user);
+    }
+
 }

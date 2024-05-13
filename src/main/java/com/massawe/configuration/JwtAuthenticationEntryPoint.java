@@ -1,4 +1,4 @@
-package com.massawe.Configuration;
+package com.massawe.configuration;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

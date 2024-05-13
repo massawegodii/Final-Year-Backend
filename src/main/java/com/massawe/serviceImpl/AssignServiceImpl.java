@@ -1,6 +1,6 @@
 package com.massawe.serviceImpl;
 
-import com.massawe.Configuration.JwtRequestFilter;
+import com.massawe.configuration.JwtRequestFilter;
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.ProductDao;
 import com.massawe.dao.UserDao;

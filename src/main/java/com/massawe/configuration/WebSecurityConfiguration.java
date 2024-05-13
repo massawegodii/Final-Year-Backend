@@ -1,4 +1,4 @@
-package com.massawe.Configuration;
+package com.massawe.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate", "/user/registerNewUser","/user/forgotPassword",
                         "/", "/css/**", "/js/**", "/img/**","/ws/**","/users/**","/messages/**","/user/changePassword","/qr/generate/{productId}",
                         "/request/asset", "/request/getRequestById/{id}", "/request/deleteRequest/{id}", "/send/sms", "/user/{username}/lock",
-                        "/maintenance/add", "/maintenance/getAllSchedule")
+                        "/maintenance/add", "/maintenance/getAllSchedule", "/user/loggedUser",
+                        "/user/singleUser/{username}")
                 .permitAll()
                 .antMatchers(HttpHeaders.ALLOW)
                 .permitAll()

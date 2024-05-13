@@ -23,7 +23,6 @@ public class Product {
     private String productDepartment;
     private String productCategory;
     private String qrcode;
-
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
     private Date productDate;

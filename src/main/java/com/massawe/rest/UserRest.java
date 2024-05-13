@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-
 @RequestMapping(path = "/user")
 @CrossOrigin(origins = "http://localhost:4200")
 public interface UserRest {
@@ -42,8 +41,17 @@ public interface UserRest {
     @PostMapping(path = "/forgotPassword")
     public ResponseEntity<String> forgotPassword(@RequestBody(required = true)Map<String, String> requestMap);
 
-    @PostMapping("/{username}/lock")
-    public ResponseEntity<?> lockUserAccount(@PathVariable String username);
+    @GetMapping("/loggedUser")
+    public ResponseEntity<User> getCurrentUser();
 
+    @PreAuthorize("hasRole('Admin')")
+    @PostMapping("/block/{username}")
+    public ResponseEntity<String> blockUser(@PathVariable String username);
 
+    @PreAuthorize("hasRole('Admin')")
+    @PostMapping("/unblock/{username}")
+    public ResponseEntity<String> unblockUser(@PathVariable String username);
+
+    @GetMapping("/singleUser/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username);
 }

@@ -1,11 +1,10 @@
 package com.massawe.serviceImpl;
 
 
-import com.massawe.Configuration.JwtRequestFilter;
+import com.massawe.configuration.JwtRequestFilter;
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.RequestAssetDao;
 import com.massawe.dao.UserDao;
-import com.massawe.entity.Department;
 import com.massawe.entity.RequestAsset;
 import com.massawe.entity.User;
 import com.massawe.enums.RequestAssetStatus;

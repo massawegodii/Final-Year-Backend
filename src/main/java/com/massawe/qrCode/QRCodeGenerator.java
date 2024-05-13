@@ -6,6 +6,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.massawe.entity.Product;
+import com.massawe.entity.User;
 import com.massawe.serviceImpl.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class QRCodeGenerator {
         try {
             Product product = productService.getProductDetailsById(productId);
             String qrData = "Smart Asset Management System\n" +
-                    "Number: " + product.getProductId() + "\n" +
+                    "Owner: " + product.getUser().getUserFirstName() + " " + product.getUser().getUserLastName() + "\n" +
                     "Name: " + product.getProductName() + "\n" +
                     "Department: " + product.getProductDepartment() + "\n" +
                     "Price: " + product.getProductPrice() + "\n" +

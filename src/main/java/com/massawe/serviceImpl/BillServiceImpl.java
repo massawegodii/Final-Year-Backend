@@ -4,7 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.massawe.Configuration.JwtRequestFilter;
+import com.massawe.configuration.JwtRequestFilter;
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.BillDao;
 import com.massawe.entity.Bill;

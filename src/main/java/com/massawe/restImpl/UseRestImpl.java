@@ -98,14 +98,43 @@ public class UseRestImpl implements UserRest {
     }
 
     @Override
-    public ResponseEntity<?> lockUserAccount(String username) {
+    public ResponseEntity<User> getCurrentUser() {
         try {
-            return userService.lockUserAccount(username);
+            return userService.getCurrentUser();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> blockUser(String username) {
+        try {
+            return userService.blockUser(username);
         }catch (Exception e){
             e.printStackTrace();
         }
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<String> unblockUser(String username) {
+        try {
+            return userService.unblockUser(username);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<User> getUserByUsername(String username) {
+        try {
+            return userService.getUserByUsername(username);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

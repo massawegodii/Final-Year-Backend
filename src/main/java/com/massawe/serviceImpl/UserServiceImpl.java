@@ -1,7 +1,8 @@
 package com.massawe.serviceImpl;
 
 import com.google.common.base.Strings;
-import com.massawe.Configuration.JwtRequestFilter;
+import com.massawe.configuration.JwtRequestFilter;
+import com.massawe.JwtService.JwtService;
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.RoleDao;
 import com.massawe.dao.UserDao;
@@ -13,6 +14,9 @@ import com.massawe.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,8 @@ public class UserServiceImpl implements UserService {
     JwtRequestFilter jwtFilter;
     @Autowired
     private EmailUtils emailUtils;
+    @Autowired
+    private JwtService jwtService;
 
 
     @Override
@@ -281,21 +287,68 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> lockUserAccount(String username) {
+    public ResponseEntity<User> getCurrentUser() {
         try {
-            User user = userDao.findByUserName(username);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUserName = authentication.getName();
+
+            User user = userDao.findByUserName(currentUserName);
+
             if (user == null) {
                 return ResponseEntity.notFound().build();
             }
 
-            user.setAccountLocked(true);
-            userDao.save(user);
+            return ResponseEntity.ok(user);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-            return MyUtils.getResponseEntity("User account locked successfully", HttpStatus.OK);
+    @Override
+    public ResponseEntity<String> blockUser(String username) {
+        try {
+            if (username.isEmpty()) {
+                return MyUtils.getResponseEntity("Username is not found.", HttpStatus.NOT_FOUND);
+            }
+            jwtService.blockUser(username);
+            return MyUtils.getResponseEntity("User " + username + " has been blocked. Please Contact with Administrator!", HttpStatus.OK);
+        } catch (UsernameNotFoundException ex) {
+            return MyUtils.getResponseEntity("Username is not found .", HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+    @Override
+    public ResponseEntity<String> unblockUser(String username) {
+        try {
+            if (username.isEmpty()) {
+                return MyUtils.getResponseEntity("Username is not Found.", HttpStatus.NOT_FOUND);
+            }
+            jwtService.unblockUser(username);
+            return MyUtils.getResponseEntity("User " + username + " has been unblocked.", HttpStatus.OK);
+        } catch (UsernameNotFoundException ex) {
+            return MyUtils.getResponseEntity("Username is not found .", HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<User> getUserByUsername(String username) {
+        try {
+            User user = userDao.findByUserName(username);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return null;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.massawe.Configuration;
+package com.massawe.configuration;
 
 import com.massawe.JwtService.JwtService;
 import com.massawe.utils.JwtUtil;

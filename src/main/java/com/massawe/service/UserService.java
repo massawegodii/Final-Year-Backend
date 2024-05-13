@@ -27,5 +27,11 @@ public interface UserService {
 
     ResponseEntity<String> forgotPassword (Map<String, String> requestMap);
 
-    ResponseEntity<?> lockUserAccount(String username);
+    ResponseEntity<User> getCurrentUser();
+
+    ResponseEntity<String> blockUser(String username);
+
+    ResponseEntity<String> unblockUser(String username);
+
+    ResponseEntity<User> getUserByUsername(String username);
 }

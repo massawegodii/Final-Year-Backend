@@ -20,8 +20,7 @@ public class User {
     private  String phoneNumber;
     @Column(name = "userPassword")
     private String userPassword;
-    private boolean accountLocked = false;
-
+    private boolean blocked;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(name = "USER_ROLE",
             joinColumns = {

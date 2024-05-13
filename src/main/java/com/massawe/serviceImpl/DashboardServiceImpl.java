@@ -1,6 +1,7 @@
 package com.massawe.serviceImpl;
 
 import com.massawe.dao.BillDao;
+import com.massawe.dao.MaintenanceDao;
 import com.massawe.dao.ProductDao;
 import com.massawe.dao.UserDao;
 import com.massawe.service.DashboardService;
@@ -21,6 +22,9 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     BillDao billDao;
 
+    @Autowired
+    MaintenanceDao maintenanceDao;
+
 
     @Override
     public ResponseEntity<Map<String, Object>> getCount() {
@@ -28,6 +32,7 @@ public class DashboardServiceImpl implements DashboardService {
         map.put("product", productDao.count());
         map.put("bill", billDao.count());
         map.put("users", userDao.count());
+        map.put("maintenance", maintenanceDao.count());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
