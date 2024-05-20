@@ -10,7 +10,6 @@ public interface CategoryService {
 
     ResponseEntity<String> deleteCategory(@PathVariable String id);
 
-
     ResponseEntity<?> getAllCategory();
 
     ResponseEntity<String> updateCategory(Map<String, String> requestMap);

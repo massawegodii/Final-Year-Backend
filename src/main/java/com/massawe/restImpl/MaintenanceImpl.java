@@ -34,4 +34,14 @@ public class MaintenanceImpl implements Maintenance {
             return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public ResponseEntity<String> deleteSchedule(String id) {
+        try {
+            return maintenanceService.deleteSchedule(id);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

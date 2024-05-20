@@ -2,6 +2,7 @@ package com.massawe.serviceImpl;
 
 import com.massawe.constants.MyConstant;
 import com.massawe.dao.MaintenanceDao;
+import com.massawe.entity.Category;
 import com.massawe.entity.Maintenance;
 import com.massawe.service.MaintenanceService;
 import com.massawe.utils.MyUtils;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class MaintenanceServiceImpl implements MaintenanceService {
@@ -83,4 +85,35 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         }
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> deleteSchedule(String id) {
+        try {
+            // Parse the id string to a Long
+            Long parsedId;
+            try {
+                parsedId = Long.parseLong(id);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return MyUtils.getResponseEntity("Invalid ID format", HttpStatus.BAD_REQUEST);
+            }
+
+            try {
+                Optional<Maintenance> optionalMaintenance = maintenanceDao.findById(parsedId);
+                if (optionalMaintenance.isPresent()) {
+                    Maintenance maintenance = optionalMaintenance.get();
+                    maintenanceDao.delete(maintenance);
+                    return MyUtils.getResponseEntity("Maintenance deleted successfully!", HttpStatus.OK);
+                } else {
+                    return MyUtils.getResponseEntity("Maintenance not found", HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
