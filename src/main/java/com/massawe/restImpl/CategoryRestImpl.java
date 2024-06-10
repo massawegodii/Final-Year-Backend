@@ -18,7 +18,7 @@ public class CategoryRestImpl implements CategoryRest {
 
 
     @Override
-    public ResponseEntity<String> addCategory(Map<String, String> requestMap) {
+    public ResponseEntity<String> addCategory(Map<String, Object> requestMap) {
         try {
             return categoryService.addCategory(requestMap);
         }catch (Exception e){
@@ -49,7 +49,7 @@ public class CategoryRestImpl implements CategoryRest {
     }
 
     @Override
-    public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
+    public ResponseEntity<String> updateCategory(Map<String, Object> requestMap) {
         try {
             return categoryService.updateCategory(requestMap);
         }catch (Exception e) {
@@ -57,4 +57,16 @@ public class CategoryRestImpl implements CategoryRest {
         }
         return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<?> getCategoriesByName(String name) {
+        try {
+            return categoryService.getCategoriesByName(name);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }

@@ -10,7 +10,8 @@ import java.util.Map;
 public interface CategoryRest {
 
     @PostMapping(path = "/add")
-    public ResponseEntity<String> addCategory(@RequestBody(required = true) Map<String, String> requestMap);
+    public ResponseEntity<String> addCategory(@RequestBody(required = true) Map<String, Object> requestMap);
+
 
     @DeleteMapping("/deleteCategory/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable String id);
@@ -20,5 +21,8 @@ public interface CategoryRest {
     public ResponseEntity<?> getAllCategory();
 
     @PostMapping(path = "/updateCategory")
-    public ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String, String> requestMap);
+    public ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String, Object> requestMap);
+
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<?> getCategoriesByName(@PathVariable String name);
 }

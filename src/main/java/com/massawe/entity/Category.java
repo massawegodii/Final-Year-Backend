@@ -2,10 +2,8 @@ package com.massawe.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,10 +12,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    public Category(){
-
-    }
+    @ElementCollection
+    private List<String> categories;
+    public Category(){}
 
     public Category(String name) {
         this.name = name;
