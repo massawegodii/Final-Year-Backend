@@ -1,1 +1,1 @@
-Asse Management System Spring boot Backend 
+Smart Asset Management System Spring boot Backend 
