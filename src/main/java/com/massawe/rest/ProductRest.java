@@ -80,4 +80,6 @@ public class ProductRest {
     public Product getProductDetailsById(@PathVariable("productId") Integer productId){
         return productService.getProductDetailsById(productId);
     }
+
+
 }

@@ -11,4 +11,6 @@ public interface ProductRest1 {
     @PostMapping(path = "/updateAssets")
     public ResponseEntity<String> updateAssets(@RequestBody(required = true) Map<String, String> requestMap);
 
+    @GetMapping("/report")
+    ResponseEntity<byte[]> generateProductPdf();
 }
