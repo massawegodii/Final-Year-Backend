@@ -76,6 +76,15 @@ public class ProductRestServiceImpl implements ProductRestService {
                 if (requestMap.containsKey("productSerialNo")) {
                     product.setProductSerialNo(Integer.parseInt(requestMap.get("productSerialNo")));
                 }
+                if (requestMap.containsKey("productStatus")) {
+                    product.setProductStatus(requestMap.get("productStatus"));
+                }
+                if (requestMap.containsKey("productCategory")) {
+                    product.setProductCategory(requestMap.get("productCategory"));
+                }
+                if (requestMap.containsKey("productDepartment")) {
+                    product.setProductDepartment(requestMap.get("productDepartment"));
+                }
 
                 // Save the updated Product entity
                 productDao.save(product);
