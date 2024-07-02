@@ -1,6 +1,8 @@
 package com.massawe.JwtService;
 
+import com.massawe.dao.AuthLogDao;
 import com.massawe.dao.UserDao;
+import com.massawe.entity.UserTrack;
 import com.massawe.entity.JwtRequest;
 import com.massawe.entity.JwtResponse;
 import com.massawe.entity.User;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,8 +34,10 @@ public class JwtService implements UserDetailsService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthLogDao authLogDao;
 
-    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
+    public JwtResponse createJwtToken(JwtRequest jwtRequest, String ipAddress) throws Exception {
         String userName = jwtRequest.getUserName();
         String userPassword = jwtRequest.getUserPassword();
 
@@ -40,7 +46,13 @@ public class JwtService implements UserDetailsService {
             throw new BlockedUserException("User is blocked. Please contact the administrator.");
         }
 
-        authenticate(userName, userPassword);
+        try {
+            authenticate(userName, userPassword);
+            logAuthAttempt(userName, ipAddress, true);
+        } catch (Exception e) {
+            logAuthAttempt(userName, ipAddress, false);
+            throw e;
+        }
 
         UserDetails userDetails = loadUserByUsername(userName);
         String newGeneratedToken = jwtUtil.generateToken(userDetails);
@@ -48,6 +60,25 @@ public class JwtService implements UserDetailsService {
         User user = userDao.findById(userName).get();
         return new JwtResponse(user, newGeneratedToken);
     }
+
+    private void logAuthAttempt(String username, String ipAddress, boolean success) {
+        UserTrack lastLog = authLogDao.findFirstByUsernameOrderByTimestampDesc(username);
+        int attemptCount = lastLog != null ? lastLog.getAttemptCount() + 1 : 1;
+
+        UserTrack log = new UserTrack();
+        log.setUsername(username);
+        log.setIpAddress(ipAddress);
+        log.setAttemptCount(attemptCount);
+        log.setSuccess(success);
+
+        // Format LocalDateTime to String
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String formattedDateTime = LocalDateTime.now().format(formatter);
+        log.setTimestamp(formattedDateTime);
+
+        authLogDao.save(log);
+    }
+
 
     public boolean isUserBlocked(String username) {
         User user = userDao.findById(username).orElse(null);

@@ -29,7 +29,7 @@ public class AssignServiceImpl implements AssignService {
         try {
             // Check if the request map contains productId and userName
             if (!requestMap.containsKey("productId") || !requestMap.containsKey("userName")) {
-                return MyUtils.getResponseEntity("ProductId and UserName are required for assigning assets.", HttpStatus.BAD_REQUEST);
+                return MyUtils.getResponseEntity("AssetId and Username are required for assigning assets.", HttpStatus.BAD_REQUEST);
             }
 
             Integer productId = Integer.parseInt(requestMap.get("productId"));
@@ -68,9 +68,9 @@ public class AssignServiceImpl implements AssignService {
                     // Save the updated Product entity
                     productDao.save(product);
 
-                    return MyUtils.getResponseEntity("Asset with ID " + productId + " assigned to User with userName " + userName + " successfully.", HttpStatus.OK);
+                    return MyUtils.getResponseEntity("Asset with ID " + productId + " assigned to User with username " + userName + " successfully.", HttpStatus.OK);
                 } else {
-                    return MyUtils.getResponseEntity("User with userName " + userName + " not found.", HttpStatus.NOT_FOUND);
+                    return MyUtils.getResponseEntity("User with username " + userName + " not found.", HttpStatus.NOT_FOUND);
                 }
             } else {
                 return MyUtils.getResponseEntity("Asset with ID " + productId + " not found.", HttpStatus.NOT_FOUND);

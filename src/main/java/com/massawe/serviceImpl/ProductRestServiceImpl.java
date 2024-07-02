@@ -134,7 +134,6 @@ public class ProductRestServiceImpl implements ProductRestService {
                 .setFontSize(15);
         document.add(invoiceHeader);
 
-
         // Add bill to and invoice details
         Table headerTable = new Table(2);
         headerTable.setWidth(UnitValue.createPercentValue(100));
@@ -149,7 +148,7 @@ public class ProductRestServiceImpl implements ProductRestService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String formattedDate = currentDate.format(formatter);
 
-        invoiceDetailsCell.add(new Paragraph("Report #00\nDue Upon Receipt\nIssued " + formattedDate));
+        invoiceDetailsCell.add(new Paragraph("Report # 00\nDue Upon Receipt\nIssued " + formattedDate));
         invoiceDetailsCell.setTextAlignment(TextAlignment.RIGHT);
         invoiceDetailsCell.setBorder(null);
 
@@ -191,11 +190,11 @@ public class ProductRestServiceImpl implements ProductRestService {
         document.close();
 
         // Save the PDF to the specified location
-        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\massa\\Downloads\\SAMS.pdf")) {
-            fos.write(out.toByteArray());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\massa\\Downloads\\SAMS.pdf")) {
+//            fos.write(out.toByteArray());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return out.toByteArray();
     }
