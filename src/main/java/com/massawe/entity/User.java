@@ -18,6 +18,8 @@ public class User {
     private String userFirstName;
     private String userLastName;
     private String imageUrl;
+    private String jobTitle;
+    private String bio;
     @Column(name = "phone_number", length = 15)
     private  String phoneNumber;
     @Column(name = "userPassword")

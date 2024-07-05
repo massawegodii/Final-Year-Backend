@@ -105,20 +105,22 @@ public class UserServiceImpl implements UserService {
         adminRole.setRoleDescription("Admin Role");
         roleDao.save(adminRole);
 
-        Role userRole = new Role();
-        userRole.setRoleName("User");
-        userRole.setRoleDescription("Default role for newly record");
-        roleDao.save(userRole);
-
         User adminUser = new User();
         adminUser.setUserName("admin");
         adminUser.setUserPassword(getEncodedPassword("123"));
-        adminUser.setUserFirstName("admin");
+        adminUser.setUserFirstName("Godfrey");
         adminUser.setUserLastName("admin");
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(adminRole);
         adminUser.setRole(adminRoles);
         userDao.save(adminUser);
+
+
+//        Role userRole = new Role();
+//        userRole.setRoleName("User");
+//        userRole.setRoleDescription("Default role for newly record");
+//        roleDao.save(userRole);
+
 
 //        User user = new User();
 //        user.setUserFirstName("keni");
@@ -187,6 +189,12 @@ public class UserServiceImpl implements UserService {
             if (requestMap.containsKey("phoneNumber")) {
                 existingUser.setPhoneNumber(requestMap.get("phoneNumber"));
             }
+            if (requestMap.containsKey("jobTitle")) {
+                existingUser.setJobTitle(requestMap.get("jobTitle"));
+            }
+            if (requestMap.containsKey("bio")) {
+                existingUser.setBio(requestMap.get("bio"));
+            }
             if (requestMap.containsKey("imageUrl")) {
                 existingUser.setImageUrl(requestMap.get("imageUrl"));
             }
@@ -209,6 +217,8 @@ public class UserServiceImpl implements UserService {
                 || requestMap.containsKey("phoneNumber")
                 || requestMap.containsKey("imageUrl")
                 || requestMap.containsKey("role")
+                || requestMap.containsKey("jobTitle")
+                || requestMap.containsKey("bio")
                 || requestMap.containsKey("userPassword"));
     }
 
