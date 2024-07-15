@@ -19,7 +19,7 @@ public class DepartmentRestImpl implements DepartmentRest {
 
 
     @Override
-    public ResponseEntity<String> addDepartment(Map<String, String> requestMap) {
+    public ResponseEntity<String> addDepartment(Map<String, Object> requestMap) {
         try {
             return departmentService.addDepartment(requestMap);
         }catch (Exception e){
@@ -50,9 +50,19 @@ public class DepartmentRestImpl implements DepartmentRest {
     }
 
     @Override
-    public ResponseEntity<String> updateDepartment(Map<String, String> requestMap) {
+    public ResponseEntity<String> updateDepartment(Map<String, Object> requestMap) {
         try {
             return departmentService.updateDepartment(requestMap);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<?> getDepartmentByName(String name) {
+        try {
+            return departmentService.getDepartmentByName(name);
         }catch (Exception e) {
             e.printStackTrace();
         }

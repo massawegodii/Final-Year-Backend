@@ -9,7 +9,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")
 public interface DepartmentRest {
     @PostMapping(path = "/add")
-    public ResponseEntity<String> addDepartment(@RequestBody(required = true) Map<String, String> requestMap);
+    public ResponseEntity<String> addDepartment(@RequestBody(required = true) Map<String, Object> requestMap);
 
     @DeleteMapping("/deleteDepartment/{id}")
     public ResponseEntity<String> deleteDepartment(@PathVariable String id);
@@ -19,5 +19,8 @@ public interface DepartmentRest {
     public ResponseEntity<?> getAllDepartment();
 
     @PostMapping(path = "/updateDepartment")
-    public ResponseEntity<String> updateDepartment(@RequestBody(required = true) Map<String, String> requestMap);
+    public ResponseEntity<String> updateDepartment(@RequestBody(required = true) Map<String, Object> requestMap);
+
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<?> getDepartmentByName(@PathVariable String name);
 }

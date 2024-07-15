@@ -137,4 +137,14 @@ public class UseRestImpl implements UserRest {
         return null;
     }
 
+    @Override
+    public ResponseEntity<String> deleteAllUserTracks() {
+        try {
+            return userService.deleteAllUserTracks();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

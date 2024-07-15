@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -133,5 +134,6 @@ public class JwtService implements UserDetailsService {
         user.setBlocked(false);
         userDao.save(user);
     }
+
 
 }

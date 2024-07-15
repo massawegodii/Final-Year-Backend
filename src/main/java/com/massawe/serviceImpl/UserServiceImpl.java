@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.massawe.configuration.JwtRequestFilter;
 import com.massawe.JwtService.JwtService;
 import com.massawe.constants.MyConstant;
+import com.massawe.dao.AuthLogDao;
 import com.massawe.dao.RoleDao;
 import com.massawe.dao.UserDao;
 import com.massawe.entity.Role;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
     private EmailUtils emailUtils;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private AuthLogDao authLogDao;
 
 
     @Override
@@ -359,6 +362,16 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ResponseEntity<String> deleteAllUserTracks() {
+        try {
+            authLogDao.deleteAll();
+            return MyUtils.getResponseEntity("All UserTrack records have been deleted.", HttpStatus.OK);
+        } catch (Exception e) {
+            return MyUtils.getResponseEntity(MyConstant.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

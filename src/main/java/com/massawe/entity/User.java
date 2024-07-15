@@ -2,7 +2,6 @@ package com.massawe.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.persistence.*;
 import java.util.Set;

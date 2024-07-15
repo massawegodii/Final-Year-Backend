@@ -34,4 +34,6 @@ public interface UserService {
     ResponseEntity<String> unblockUser(String username);
 
     ResponseEntity<User> getUserByUsername(String username);
+
+    ResponseEntity<String> deleteAllUserTracks();
 }

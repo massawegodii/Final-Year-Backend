@@ -189,13 +189,6 @@ public class ProductRestServiceImpl implements ProductRestService {
         document.add(table);
         document.close();
 
-        // Save the PDF to the specified location
-//        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\massa\\Downloads\\SAMS.pdf")) {
-//            fos.write(out.toByteArray());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         return out.toByteArray();
     }
 }

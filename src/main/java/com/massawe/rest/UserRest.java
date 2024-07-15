@@ -54,4 +54,7 @@ public interface UserRest {
 
     @GetMapping("/singleUser/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username);
+
+    @DeleteMapping("/all")
+    ResponseEntity<String> deleteAllUserTracks();
 }

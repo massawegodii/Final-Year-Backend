@@ -23,13 +23,14 @@ public class Product {
     private String productDepartment;
     private String productCategory;
     private String productType;
+    private String productOffice;
     private String qrcode;
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
     private Date productDate;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)// Many products can belong to one user
-    @JoinColumn(name = "user_name") // Name of the column in Product table that references User
+    @ManyToOne(cascade = CascadeType.PERSIST) // Many products can belong to one user
+    @JoinColumn(name = "user_name")
     private User user;
 
 
